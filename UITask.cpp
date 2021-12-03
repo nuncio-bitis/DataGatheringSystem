@@ -74,15 +74,21 @@ void UITask::UpdateItem(DataItem<uint64_t> *item)
     std::string sstate;
     if (state == DataItemState::OutOfRangeLow) {
         sstate = "OORL";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *LOW*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::OutOfRangeHigh) {
         sstate = "OORH";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *HIGH*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::Stale) {
         sstate = "STALE";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *STALE*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::Valid) {
         sstate = "OK";
+        m_pLog->log(eLOG_DEBUG, "[UI] (%s) %s %lld %s",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     }
-    m_pLog->log(eLOG_DEBUG, "[UI] (%s) %s %lld %s",
-            sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
 
     // TODO Update value on UI
 }
@@ -99,15 +105,21 @@ void UITask::UpdateItem(DataItem<double> *item)
     std::string sstate;
     if (state == DataItemState::OutOfRangeLow) {
         sstate = "OORL";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *LOW*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::OutOfRangeHigh) {
         sstate = "OORH";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *HIGH*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::Stale) {
         sstate = "STALE";
+        m_pLog->log(eLOG_MED, "[UI] (%s) %s %lld %s *STALE*",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     } else if (state == DataItemState::Valid) {
         sstate = "OK";
+        m_pLog->log(eLOG_DEBUG, "[UI] (%s) %s %lg %s",
+                sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
     }
-    m_pLog->log(eLOG_DEBUG, "[UI] (%s) %s %lg %s",
-            sstate.c_str(), item->name().c_str(), value, item->getUnits().c_str());
 
     // TODO Update value on UI
 }
