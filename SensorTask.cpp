@@ -119,8 +119,8 @@ void SensorTask::Entry()
         if (++m_sampleCount >= m_samplesPerReport) {
             newValue = cumulative / m_sampleCount;
             pDataItem->setValue(newValue);
-//            m_pLog->log(eLOG_DEBUG, "[%d] %s: Report %s - %lg %s",
-//                    m_id, GetName().c_str(), m_type.c_str(), newValue, pDataItem->getUnits().c_str() );
+            //m_pLog->log(eLOG_DEBUG, "[%d] %s: Report %s - %lg %s",
+            //        m_id, GetName().c_str(), m_type.c_str(), newValue, pDataItem->getUnits().c_str() );
 
             m_sampleCount = 0;
             cumulative = 0.0;
