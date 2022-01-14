@@ -3,27 +3,6 @@
 ## Overview
 Sample software system used to monitor data from various sensors.
 
-## Files
-
-```text
-DataGatheringSystem
-  ├── Makefile
-  ├── DataMonitor.cpp
-  ├── DataStore.cpp
-  ├── DataStore.h
-  ├── FluidTempSensor.cpp
-  ├── FluidTempSensor.h
-  ├── LICENSE
-  ├── Makefile
-  ├── MasterTask.cpp
-  ├── MasterTask.h
-  ├── README.md
-  ├── SensorTask.cpp
-  ├── SensorTask.h
-  ├── UITask.cpp
-  └── UITask.h
-```
-
 ## External Dependencies
 
 * [CPP Tools library](https://github.com/nuncio-bitis/Tools)  

@@ -52,7 +52,7 @@ private:
     int m_samplesPerReport;
     int m_sampleCount;
 
-    DataItem<double> *pDataItem; // XXX
+    DataItem<double> *pDataItem;
 
     // Work function of the sensor task.
     void Entry(void) override;

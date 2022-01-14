@@ -28,10 +28,8 @@
 
 #include <iostream>
 
-// XXX
 #include <ctime>
 #include <sys/time.h>
-// XXX
 
 // ****************************************************************************
 
