@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the DataGatheringSystem distribution
  *   (https://github.com/nuncio-bitis/DataGatheringSystem
  * Copyright (c) 2021 James P. Parziale.
- * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3.
  *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -31,7 +31,6 @@
 #define _XOPEN_SOURCE
 #endif
 #include <ucontext.h>
-
 
 #include <iostream>
 #include <fstream>
@@ -73,14 +72,17 @@ int64_t getCPUFreeMem()
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
     const std::string meminfo("/proc/meminfo");
     std::ifstream infofile;
-    infofile.open (meminfo, std::ios::in);
+    infofile.open(meminfo, std::ios::in);
 
-    if (infofile.is_open()) {
+    if (infofile.is_open())
+    {
         std::string line;
-        while (std::getline(infofile,line)) {
+        while (std::getline(infofile, line))
+        {
             // Read lines until find "MemFree:"
             std::string::size_type n = line.find("MemFree:");
-            if (n != std::string::npos) {
+            if (n != std::string::npos)
+            {
                 break;
             }
         }
@@ -89,20 +91,23 @@ int64_t getCPUFreeMem()
         std::istringstream iss(line);
         std::vector<std::string> tokens;
         std::copy(std::istream_iterator<std::string>(iss),
-                std::istream_iterator<std::string>(),
-                back_inserter(tokens));
+                  std::istream_iterator<std::string>(),
+                  back_inserter(tokens));
 
         ret = std::stoll(tokens[1]);
-        if ("kB" == tokens[2]) {
+        if ("kB" == tokens[2])
+        {
             ret *= 1024;
-        } else if ("MB" == tokens[2]) {
+        }
+        else if ("MB" == tokens[2])
+        {
             ret *= 1024 * 1024;
         }
 
         infofile.close();
     }
 #else
-    // TODO
+    // @TODO
 #endif
 
     return ret;
@@ -119,17 +124,18 @@ double getCPUTemp()
     double millideg = 0.0;
     FILE *thermal;
 
-    thermal = fopen("/sys/class/thermal/thermal_zone0/temp","r");
+    thermal = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
     if (thermal != NULL)
     {
-        if (fscanf(thermal,"%lf",&millideg) < 1) {
+        if (fscanf(thermal, "%lf", &millideg) < 1)
+        {
             millideg = -273000.0;
         }
         fclose(thermal);
         systemp = millideg / 1000;
     }
 #else
-    // TODO
+    // @TODO
 #endif
 
     return systemp;
@@ -142,11 +148,10 @@ class StatTimer : public Timer
 {
 public:
     StatTimer(const std::string &name,
-            const IntervalMs &start,
-            const IntervalMs &interval,
-            Logger *plogger) :
-       Timer(name, start, interval),
-       m_plogger(plogger)
+              const IntervalMs &start,
+              const IntervalMs &interval,
+              Logger *plogger) : Timer(name, start, interval),
+                                 m_plogger(plogger)
     {
         cpu_mem_free = dynamic_cast<DataItem<uint64_t> *>(DataStore::getInstance()->GetDataItem(CPU_MEM_FREE));
         cpu_temp = dynamic_cast<DataItem<double> *>(DataStore::getInstance()->GetDataItem(CPU_TEMP));
@@ -216,10 +221,10 @@ int main(int argc, char **argv)
 
     // Sensor tasks (Type = flow, pressure, temperature, light, humidity, ...)
     //   type (string), sample freq (double), report period (samples in this period are averaged before reported)
-    FluidTempSensor sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
-//    SensorTask      sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
-    SensorTask      sensor2{"Gas Flow Rate",   FLOW1,        &logger, "Flow",         5.0, 1.0}; // 5Hz, update every 1 seconds
-    SensorTask      sensor3{"Gas Pressure",    PRESSURE1,    &logger, "Pressure",    10.0, 3.0}; // 10Hz, update every 3 seconds
+    FluidTempSensor sensor1{"Fluid Temp", TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
+    // SensorTask      sensor1{"Fluid Temp",      TEMP_SENSE_1, &logger, "Temperature", 20.0, 2.0}; // 20Hz, update every 2 seconds
+    SensorTask sensor2{"Gas Flow Rate", FLOW1, &logger, "Flow", 5.0, 1.0};                  // 5Hz, update every 1 seconds
+    SensorTask sensor3{"Gas Pressure", PRESSURE1, &logger, "Pressure", 10.0, 3.0};          // 10Hz, update every 3 seconds
 
     // NOTE: Sensor tasks have their own timers to read and average sensor data, then write to DataStore objects.
 
@@ -240,7 +245,7 @@ int main(int argc, char **argv)
 
     //-------------------------------------------------------------------------
 
-    // TODO Create CLI object
+    // @TODO Create CLI object
 
     //-------------------------------------------------------------------------
 
@@ -249,7 +254,8 @@ int main(int argc, char **argv)
     // Start the master task, which will bring up all other tasks.
     masterTask.Start();
     // MasterTask will terminate if no tasks were added.
-    if (masterTask.isTerminated()) {
+    if (masterTask.isTerminated())
+    {
         logger.log(eLOG_CRIT, "main() MasterTask has terminated.");
         return EXIT_FAILURE;
     }
@@ -259,17 +265,18 @@ int main(int argc, char **argv)
 
     //-------------------------------------------------------------------------
 
-    // XXX DEBUG - sample system lifecycle
+    // @DEBUG - sample system lifecycle
     int count = 0;
 
     Task::Sleep(1 * 1000);
 
     // This would be the application background in a normal system...
-    while (!masterTask.isTerminated()) {
-
+    while (!masterTask.isTerminated())
+    {
 
         // ------------------------------------------------
-        switch (count) {
+        switch (count)
+        {
         case 1:
             count++;
             logger.log(eLOG_INFO, "----------------------------------------");
@@ -301,7 +308,7 @@ int main(int argc, char **argv)
 
         default:
             count++;
-            // TODO - Background processing, maybe including CLI...
+            // @TODO - Background processing, maybe including CLI...
 
             logger.log(eLOG_INFO, "----------------------------------------");
             logger.log(eLOG_INFO, "main(%d) Doing work...", count);
@@ -313,12 +320,11 @@ int main(int argc, char **argv)
             break;
         }
         // ------------------------------------------------
-
     }
     logger.log(eLOG_INFO, "----------------------------------------");
     logger.log(eLOG_INFO, masterTask.GetSystemInfo());
     logger.log(eLOG_INFO, "----------------------------------------");
-    // XXX DEBUG
+    // @DEBUG
 
     statTimer.Stop();
 
@@ -336,14 +342,13 @@ int main(int argc, char **argv)
 
 //-----------------------------------------------------------------------------
 
-
 //! Save system device state
 void SaveSystemState(void)
 {
     //  Shut down all active scripts.  This will terminate BIT and freeze
     //  the state of the DST.
-//    gObjMgr->ServerConsole()->Display(1, "Stopping all scripts");
-//    gObjMgr->ScriptManager()->StopAllScripts();
+    // gObjMgr->ServerConsole()->Display(1, "Stopping all scripts");
+    // gObjMgr->ScriptManager()->StopAllScripts();
 
     pLogger->log(eLOG_CRIT, "Saving system state");
     pLogger->WriteToFile();
@@ -358,11 +363,11 @@ void SaveSystemState(void)
  *  \param code     signal subcode
  *  \return         string with description
  */
-const char* FaultString(int signal, int code)
+const char *FaultString(int signal, int code)
 {
-    if(SIGILL==signal)
+    if (SIGILL == signal)
     {
-        switch(code)
+        switch (code)
         {
         case ILL_ILLOPC:
             return "illegal opcode";
@@ -385,9 +390,9 @@ const char* FaultString(int signal, int code)
         }
     }
 
-    if(SIGFPE==signal)
+    if (SIGFPE == signal)
     {
-        switch(code)
+        switch (code)
         {
         case FPE_INTDIV:
             return "integer divide by zero";
@@ -412,9 +417,9 @@ const char* FaultString(int signal, int code)
         }
     }
 
-    if(SIGSEGV==signal)
+    if (SIGSEGV == signal)
     {
-        switch(code)
+        switch (code)
         {
         case SEGV_MAPERR:
             return "address not mapped to object";
@@ -427,9 +432,9 @@ const char* FaultString(int signal, int code)
         }
     }
 
-    if(SIGBUS==signal)
+    if (SIGBUS == signal)
     {
-        switch(code)
+        switch (code)
         {
         case BUS_ADRALN:
             return "invalid address alignment";
@@ -444,18 +449,19 @@ const char* FaultString(int signal, int code)
         }
     }
 
-    if (SIGINT==signal)
+    if (SIGINT == signal)
     {
         return "SIGINT; Terminated by user";
     };
 
-    if (SIGABRT==signal)
+    if (SIGABRT == signal)
     {
-        if (code > 0) {
+        if (code > 0)
+        {
             return "Kernel-generated signal";
         }
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
-        switch(code)
+        switch (code)
         {
         case SI_TKILL:
             return "Self-abort; tkill()";
@@ -482,7 +488,7 @@ const char* FaultString(int signal, int code)
             return "External abort";
         }
 #else
-        switch(code)
+        switch (code)
         {
         case SI_USER:
             return "Self-abort";
@@ -526,7 +532,7 @@ const char* FaultString(int signal, int code)
  *  \param siginfo  The signal information
  *  \param context  The process context at the time of the exception
  */
-void FaultHandler(int signal, siginfo_t * siginfo, void *context)
+void FaultHandler(int signal, siginfo_t *siginfo, void *context)
 {
     //  Register the server cleanup function
     atexit(SaveSystemState);
@@ -546,17 +552,17 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
     };
 
     //  Real fault handling
-    const int maxbtsize = 128; // display up to this many back calls
+    const int maxbtsize = 128;     // display up to this many back calls
     const int max_line_size = 256; // max no. of chars in each backtrace line
 
-    void*  stack[maxbtsize];
-    ucontext_t * cntxt = (ucontext_t *)context;
+    void *stack[maxbtsize];
+    ucontext_t *cntxt = (ucontext_t *)context;
 
     // Output buffers
-    char  exAddr[max_line_size];
-    char  exText[max_line_size];
-    char  exError[max_line_size];
-    char  exBackTrace[maxbtsize * max_line_size + 1];
+    char exAddr[max_line_size];
+    char exText[max_line_size];
+    char exError[max_line_size];
+    char exBackTrace[maxbtsize * max_line_size + 1];
 
     memset(stack, 0, sizeof(stack));
 
@@ -570,14 +576,14 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
     snprintf(exError, sizeof(exError), "%d", siginfo->si_errno);
 
     //  Get backtrace of stack.  For some architectures, replace missing address.
-    int btSz  = backtrace((void**)stack, maxbtsize);
+    int btSz = backtrace((void **)stack, maxbtsize);
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
-    stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_RIP]);     // x86_64
-//    stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_EIP]);   // i386
-//    stack[3] = (void *)(cntxt->uc_mcontext.regs->nip);        // PPC
+    stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_RIP]); // x86_64
+    //stack[3] = (void *)(cntxt->uc_mcontext.gregs[REG_EIP]);   // i386
+    //stack[3] = (void *)(cntxt->uc_mcontext.regs->nip);        // PPC
 #else
-//    stack[3] = (void *)(cntxt->uc_mcontext->__ss.__rip);        // x86_64 MacOs
-    stack[3] = (void *)(cntxt->uc_mcontext->__ss.__pc);        // M1 Pro MacOs
+    //    stack[3] = (void *)(cntxt->uc_mcontext->__ss.__rip);        // x86_64 MacOs
+    stack[3] = (void *)(cntxt->uc_mcontext->__ss.__pc); // M1 Pro MacOs
 #endif
 
     //  Get backtrace info
@@ -589,11 +595,11 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
     else
     {
         //  Try to get strings with symbolic info
-        char ** symbols = backtrace_symbols((void**)stack, btSz);
+        char **symbols = backtrace_symbols((void **)stack, btSz);
         if (symbols)
         {
             char tmpStr[max_line_size];
-            for (int t=0; t < btSz; t++)
+            for (int t = 0; t < btSz; t++)
             {
                 snprintf(tmpStr, sizeof(tmpStr), "\n%2d [%p] %s", t, stack[t], symbols[t]);
                 strncat(exBackTrace, tmpStr, (maxbtsize * max_line_size));
@@ -605,7 +611,7 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
             // descriptor, which we have to sneak out of the FILE structure via "_file".)
             std::string timestamp = pLogger->TimeStamp();
             strcpy(exBackTrace, (timestamp + std::string(".backtrace")).c_str());
-            FILE* crashFile = fopen(exBackTrace, "w");
+            FILE *crashFile = fopen(exBackTrace, "w");
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
             backtrace_symbols_fd(stack, btSz, crashFile->_fileno);
 #else
@@ -617,12 +623,14 @@ void FaultHandler(int signal, siginfo_t * siginfo, void *context)
     }
 
     //  Build the message
-    std::cerr << std::endl << "*** SYSTEM_EXCEPTION FAIL ::FaultHandler(): " << std::endl
-            << "  Error: " << exError << std::endl
-            << "  Addr: " << exAddr << std::endl
-            << "  Text: " << exText << std::endl
-            << "  Backtrace: " << exBackTrace
-            << std::endl << std::endl;
+    std::cerr << std::endl
+              << "*** SYSTEM_EXCEPTION FAIL ::FaultHandler(): " << std::endl
+              << "  Error: " << exError << std::endl
+              << "  Addr: " << exAddr << std::endl
+              << "  Text: " << exText << std::endl
+              << "  Backtrace: " << exBackTrace
+              << std::endl
+              << std::endl;
 
     exit(signal);
 }
@@ -637,59 +645,59 @@ void SetupExceptionHandler()
 {
     struct sigaction action;
 
-    memset(&action, 0, sizeof (action));
+    memset(&action, 0, sizeof(action));
     action.sa_sigaction = FaultHandler;
-    sigemptyset (&action.sa_mask);
+    sigemptyset(&action.sa_mask);
     action.sa_flags = SA_SIGINFO | SA_RESETHAND;
 
-    if (-1 == sigaction (SIGSEGV, &action, NULL))
+    if (-1 == sigaction(SIGSEGV, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGSEGV...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGILL, &action, NULL))
+    if (-1 == sigaction(SIGILL, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGILL...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGINT, &action, NULL))
+    if (-1 == sigaction(SIGINT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGINT...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGFPE, &action, NULL))
+    if (-1 == sigaction(SIGFPE, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGFPE...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGBUS, &action, NULL))
+    if (-1 == sigaction(SIGBUS, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGBUS...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGQUIT, &action, NULL))
+    if (-1 == sigaction(SIGQUIT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGQUIT...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGABRT, &action, NULL))
+    if (-1 == sigaction(SIGABRT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGABRT...)" << std::endl;
     };
 
-    if (-1 == sigaction (SIGTERM, &action, NULL))
+    if (-1 == sigaction(SIGTERM, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGTERM...)" << std::endl;
     };
 
 #if defined(_POSIX_C_SOURCE) && !defined(_DARWIN_C_SOURCE)
-    if (-1 == sigaction (SIGSTKFLT, &action, NULL))
+    if (-1 == sigaction(SIGSTKFLT, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGSTKFLT...)" << std::endl;
     };
 #endif
 
-    if (-1 == sigaction (SIGSYS, &action, NULL))
+    if (-1 == sigaction(SIGSYS, &action, NULL))
     {
         std::cerr << "SYSTEM_CALL_FAILED FAIL cExceptionHandler() sigaction(SIGSSYS...)" << std::endl;
     };

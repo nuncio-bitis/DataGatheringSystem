@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the DataGatheringSystem distribution
  *   (https://github.com/nuncio-bitis/DataGatheringSystem
  * Copyright (c) 2021 James P. Parziale.
- * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3.
  *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /*
@@ -37,7 +37,7 @@ class UITask : public AppTask, public DataItemSubscriber
 {
     // ------------------------------------------------------------------------
 public:
-    UITask(const std::string name, int id, Logger* pLog /* TODO pass in link to data store */);
+    UITask(const std::string name, int id, Logger *pLog /* @TODO pass in link to data store */);
     virtual ~UITask();
 
     void DataItemUpdated(int id) override;
@@ -51,7 +51,7 @@ private:
     void UpdateItem(DataItem<double> *item);
 
     int m_id;
-    Logger* m_pLog;
+    Logger *m_pLog;
 
     // Pointers to data store objects
     DataItem<uint64_t> *cpu_mem_free;

@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the DataGatheringSystem distribution
  *   (https://github.com/nuncio-bitis/DataGatheringSystem
  * Copyright (c) 2021 James P. Parziale.
- * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, version 3.
  *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License 
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 /*
@@ -33,20 +33,25 @@
 
 // ****************************************************************************
 
-// TODO Each sensor should have specifics for its own HW interface
+// @TODO Each sensor should have specifics for its own HW interface
 // e.g. Type ("I2C", "SPI", "Serial", Mem-Mapped Addr, etc), Location ("/dev/...", "0x########", etc)
 
 // The id is the DataStore ID, which can be used for multiple purposes.
-FluidTempSensor::FluidTempSensor(const std::string name, DataItemId id, Logger* pLog, const std::string type, double sampleFreq, double reportPeriod) :
-    AppTask(name, pLog),
-    m_id(id),
-    m_pLog(pLog),
-    m_type(type),
-    m_sampleFreq(sampleFreq),
-    m_reportPeriod(reportPeriod),
-    m_samplesPerReport(sampleFreq * reportPeriod),
-    m_sampleCount(0),
-    pDataItem(nullptr)
+FluidTempSensor::FluidTempSensor(const std::string name,
+                                 DataItemId id,
+                                 Logger *pLog,
+                                 const std::string type,
+                                 double sampleFreq,
+                                 double reportPeriod)
+    : AppTask(name, pLog),
+      m_id(id),
+      m_pLog(pLog),
+      m_type(type),
+      m_sampleFreq(sampleFreq),
+      m_reportPeriod(reportPeriod),
+      m_samplesPerReport(sampleFreq * reportPeriod),
+      m_sampleCount(0),
+      pDataItem(nullptr)
 {
     m_pLog->log(eLOG_DEBUG, "%s : CREATED", GetName().c_str());
 }
@@ -63,7 +68,7 @@ void FluidTempSensor::Entry()
     waitForBeginOperation();
 
     // ------------------------------------------------
-    // TODO Task initialization
+    // @TODO Task initialization
 
     m_pLog->log(eLOG_DEBUG, "%s: BEGIN + Initialization", GetName().c_str());
 
@@ -88,7 +93,7 @@ void FluidTempSensor::Entry()
         }
 
         // --------------------------------------------
-        // TODO Task work - gather sensor data
+        // @TODO Task work - gather sensor data
 
         // Get sample at sample frequency
         Sleep(1000 / m_sampleFreq);
@@ -98,16 +103,17 @@ void FluidTempSensor::Entry()
         struct timeval detail_time; // For seconds and microseconds
         gettimeofday(&detail_time, NULL);
         double delta;
-        
+
         delta = (500.0 - (detail_time.tv_usec % 1000)) / 100.0; // rand[-5.0, 5.0]
         current = 37.0 + delta;
         cumulative += current;
 
-        if (++m_sampleCount >= m_samplesPerReport) {
+        if (++m_sampleCount >= m_samplesPerReport)
+        {
             newValue = cumulative / m_sampleCount;
             pDataItem->setValue(newValue);
-//            m_pLog->log(eLOG_DEBUG, "[%d] %s: Report %s - %lg %s",
-//                    m_id, GetName().c_str(), m_type.c_str(), newValue, pDataItem->getUnits().c_str() );
+            // m_pLog->log(eLOG_DEBUG, "[%d] %s: Report %s - %lg %s",
+            //         m_id, GetName().c_str(), m_type.c_str(), newValue, pDataItem->getUnits().c_str() );
 
             m_sampleCount = 0;
             cumulative = 0.0;
@@ -128,7 +134,7 @@ void FluidTempSensor::Entry()
     } // end while running
 
     // ------------------------------------------------
-    // TODO Task cleanup before exit
+    // @TODO Task cleanup before exit
     m_pLog->log(eLOG_DEBUG, "%s.%s : CLEANUP", GetName().c_str(), __FUNCTION__);
     // ------------------------------------------------
 }
