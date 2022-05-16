@@ -47,7 +47,7 @@ HEADER_FILES = $(shell ls $(PROJECT_ROOT)*.h 2> /dev/null)
 CFLAGS += -O2 -Wall
 CFLAGS += $(INCLUDES)
 
-CXXFLAGS += -std=c++2a
+CXXFLAGS += -std=c++20
 CXXFLAGS += $(CFLAGS)
 
 #-------------------------------------------------------------------------------
