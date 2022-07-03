@@ -1,9 +1,12 @@
 <mxfile host="65bd71144e">
     <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-        <mxGraphModel dx="747" dy="750" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1186" dy="849" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="WIyWlLk6GJQsqaUBKTNV-0"/>
                 <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0"/>
+                <mxCell id="1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+                    <mxGeometry x="40" y="20" width="760" height="660" as="geometry"/>
+                </mxCell>
                 <mxCell id="d3OPeY2R7XjmmJb251k7-0" value="&lt;h1&gt;Data Gathering System Software Architecture&lt;/h1&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
                     <mxGeometry x="130" y="40" width="560" height="20" as="geometry"/>
                 </mxCell>
@@ -135,8 +138,8 @@
                         <mxPoint x="-25" y="4" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="0" value="&lt;font color=&quot;#808080&quot;&gt;J. Parziale Jul-2022&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-                    <mxGeometry x="560" y="610" width="110" height="30" as="geometry"/>
+                <mxCell id="0" value="&lt;font color=&quot;#808080&quot;&gt;J. Parziale Jul-2022&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+                    <mxGeometry x="680" y="650" width="110" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

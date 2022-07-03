@@ -10,7 +10,7 @@ Sample software system used to monitor data from various sensors.
 
 ## Description
 
-![Data Gathering System SW Architecture](%2E%2FDGS_SW_Architecture%2Edrawio%2Epng)  
+![Data Gathering System SW Architecture](%2E%2FDGS_SW_Architecture%2Epng)  
 
 The main() function of the application provides the "background" processing for the application. All data gathering, handling, and logging is done using subordinate application tasks, which are controlled by a master task (which in turn can be controlled by the main function.)
 
